@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130307703,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_AUTH_SIGNUP",
+      "version": "1761129315810"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/UV_AUTH_SIGNUP.tsx",
+      "type": "text",
+      "size": 19342,
+      "dependencies": false
+    }
+  ]
+}

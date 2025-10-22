@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130575552,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_SEARCH",
+      "version": "1761129316104"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/GV_SEARCH.tsx",
+      "type": "text",
+      "size": 32555,
+      "dependencies": false
+    }
+  ]
+}

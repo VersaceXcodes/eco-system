@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130748708,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_SPECIES_SPOTLIGHT",
+      "version": "1761129693530"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/UV_SPECIES_SPOTLIGHT.tsx",
+      "type": "text",
+      "size": 31077,
+      "dependencies": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130208309,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_NAV",
+      "version": "1761129316087"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/GV_NAV.tsx",
+      "type": "text",
+      "size": 12933,
+      "dependencies": false
+    }
+  ]
+}

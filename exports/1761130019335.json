@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130019335,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_AUTH_VERIFICATION",
+      "version": "latest"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/UV_AUTH_VERIFICATION.tsx",
+      "type": "text",
+      "size": 10548,
+      "dependencies": false
+    }
+  ]
+}

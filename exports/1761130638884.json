@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130638884,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_PROFILE_SETTINGS",
+      "version": "latest"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/UV_PROFILE_SETTINGS.tsx",
+      "type": "text",
+      "size": 45051,
+      "dependencies": false
+    }
+  ]
+}

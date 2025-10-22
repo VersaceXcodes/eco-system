@@ -1,0 +1,1123 @@
+asyncapi: 2.0.0
+info:
+  title: EcoPulse Realtime Events API
+  version: 1.0.0
+  description: Realtime event specifications for EcoPulse environmental monitoring platform
+servers:
+  development:
+    url: http://localhost:3000
+    protocol: ws
+channels:
+  observation.created:
+    description: Emitted when a new observation is created
+    subscribe:
+      message:
+        name: observation_created
+        payload:
+          $ref: "#/components/messages/observationCreated"
+  observation.updated:
+    description: Emitted when an observation is updated
+    subscribe:
+      message:
+        name: observation_updated
+        payload:
+          $ref: "#/components/messages/observationUpdated"
+  observation.verified:
+    description: Emitted when an observation is verified
+    subscribe:
+      message:
+        name: observation_verified
+        payload:
+          $ref: "#/components/messages/observationVerified"
+  observation.disputed:
+    description: Emitted when an observation is disputed
+    subscribe:
+      message:
+        name: observation_disputed
+        payload:
+          $ref: "#/components/messages/observationDisputed"
+  observation.expiration_warning:
+    description: Emitted when an observation may be outdated
+    subscribe:
+      message:
+        name: observation_expiration_warning
+        payload:
+          $ref: "#/components/messages/observationExpirationWarning"
+  observation.conflict_detected:
+    description: Emitted when conflicting observations are detected
+    subscribe:
+      message:
+        name: observation_conflict_detected
+        payload:
+          $ref: "#/components/messages/observationConflictDetected"
+  observation.batch_submitted:
+    description: Emitted when batch observations are submitted
+    subscribe:
+      message:
+        name: observation_batch_submitted
+        payload:
+          $ref: "#/components/messages/observationBatchSubmitted"
+  verification.requested:
+    description: Emitted when verification is requested
+    subscribe:
+      message:
+        name: verification_requested
+        payload:
+          $ref: "#/components/messages/verificationRequested"
+  verification.completed:
+    description: Emitted when verification is completed
+    subscribe:
+      message:
+        name: verification_completed
+        payload:
+          $ref: "#/components/messages/verificationCompleted"
+  verification.additional_info_requested:
+    description: Emitted when additional information is requested during verification
+    subscribe:
+      message:
+        name: verification_additional_info_requested
+        payload:
+          $ref: "#/components/messages/verificationAdditionalInfoRequested"
+  map.observations.updated:
+    description: Emitted when observations affect the map view
+    subscribe:
+      message:
+        name: map_observations_updated
+        payload:
+          $ref: "#/components/messages/mapObservationsUpdated"
+  map.habitat_health.updated:
+    description: Emitted when habitat health scores change in specific areas
+    subscribe:
+      message:
+        name: map_habitat_health_updated
+        payload:
+          $ref: "#/components/messages/mapHabitatHealthUpdated"
+  user.credibility_score.updated:
+    description: Emitted when a user's credibility score changes
+    subscribe:
+      message:
+        name: user_credibility_score_updated
+        payload:
+          $ref: "#/components/messages/userCredibilityScoreUpdated"
+  user.profile.updated:
+    description: Emitted when a user profile is updated
+    subscribe:
+      message:
+        name: user_profile_updated
+        payload:
+          $ref: "#/components/messages/userProfileUpdated"
+  user.settings.updated:
+    description: Emitted when user settings are updated
+    subscribe:
+      message:
+        name: user_settings_updated
+        payload:
+          $ref: "#/components/messages/userSettingsUpdated"
+  educational.spotlight.updated:
+    description: Emitted when species spotlight content is updated
+    subscribe:
+      message:
+        name: educational_spotlight_updated
+        payload:
+          $ref: "#/components/messages/educationalSpotlightUpdated"
+  educational.guide.updated:
+    description: Emitted when habitat guides are updated
+    subscribe:
+      message:
+        name: educational_guide_updated
+        payload:
+          $ref: "#/components/messages/educationalGuideUpdated"
+  educational.challenge.progress:
+    description: Emitted when challenge progress updates
+    subscribe:
+      message:
+        name: educational_challenge_progress
+        payload:
+          $ref: "#/components/messages/educationalChallengeProgress"
+  notification.created:
+    description: Emitted when a new notification is created
+    subscribe:
+      message:
+        name: notification_created
+        payload:
+          $ref: "#/components/messages/notificationCreated"
+  notification.read:
+    description: Emitted when a notification is marked as read
+    subscribe:
+      message:
+        name: notification_read
+        payload:
+          $ref: "#/components/messages/notificationRead"
+  offline.sync.requested:
+    description: Emitted when offline data sync is requested
+    subscribe:
+      message:
+        name: offline_sync_requested
+        payload:
+          $ref: "#/components/messages/offlineSyncRequested"
+  offline.sync.completed:
+    description: Emitted when offline data sync is completed
+    subscribe:
+      message:
+        name: offline_sync_completed
+        payload:
+          $ref: "#/components/messages/offlineSyncCompleted"
+components:
+  messages:
+    observationCreated:
+      payload:
+        type: object
+        properties:
+          observation_id:
+            type: string
+            description: Unique identifier for the observation
+          user_id:
+            type: string
+            description: ID of the submitting user
+          species:
+            type: string
+            description: Identified species name
+          location:
+            type: object
+            properties:
+              latitude:
+                type: number
+                description: Latitude coordinate
+              longitude:
+                type: number
+                description: Longitude coordinate
+              address:
+                type: string
+                description: Human-readable address
+              blurred:
+                type: boolean
+                description: Whether location is blurred for privacy
+            required:
+              - latitude
+              - longitude
+          media:
+            type: array
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - photo
+                    - audio
+                url:
+                  type: string
+                  format: uri
+                metadata:
+                  type: object
+                  additionalProperties: true
+          habitat_health_score:
+            type: number
+            minimum: 0
+            maximum: 100
+            description: Habitat health assessment score
+          submitted_at:
+            type: string
+            format: date-time
+            description: Timestamp of submission
+          status:
+            type: string
+            enum:
+              - pending
+              - verified
+              - disputed
+              - expired
+            description: Current observation status
+          verification_tier:
+            type: integer
+            minimum: 1
+            maximum: 2
+            description: Verification tier (1=user verified, 2=expert verified)
+          is_private:
+            type: boolean
+            description: Privacy setting of the observation
+        required:
+          - observation_id
+          - user_id
+          - species
+          - location
+          - submitted_at
+          - status
+    observationUpdated:
+      payload:
+        type: object
+        properties:
+          observation_id:
+            type: string
+            description: Unique identifier for the observation
+          previous_status:
+            type: string
+            enum:
+              - pending
+              - verified
+              - disputed
+              - expired
+            description: Previous status before update
+          updated_fields:
+            type: object
+            properties:
+              species:
+                type: string
+                description: Updated species identification
+              location:
+                $ref: "#/components/schemas/observationLocation"
+              media:
+                type: array
+                items:
+                  $ref: "#/components/schemas/observationMedia"
+              habitat_health_score:
+                type: number
+                minimum: 0
+                maximum: 100
+              status:
+                type: string
+                enum:
+                  - pending
+                  - verified
+                  - disputed
+                  - expired
+              is_private:
+                type: boolean
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of update
+        required:
+          - observation_id
+          - updated_fields
+          - updated_at
+    observationVerified:
+      payload:
+        type: object
+        properties:
+          observation_id:
+            type: string
+            description: Unique identifier for the observation
+          verified_by:
+            type: string
+            description: User ID of the verifier
+          verification_tier:
+            type: integer
+            minimum: 1
+            maximum: 2
+            description: Tier of verification performed
+          verified_at:
+            type: string
+            format: date-time
+            description: Timestamp of verification
+          confidence_level:
+            type: number
+            minimum: 0
+            maximum: 1
+            description: Verifier's confidence in the identification
+          comments:
+            type: string
+            description: Additional verification comments
+          previous_status:
+            type: string
+            enum:
+              - pending
+              - disputed
+            description: Status before verification
+        required:
+          - observation_id
+          - verified_by
+          - verification_tier
+          - verified_at
+          - previous_status
+    observationDisputed:
+      payload:
+        type: object
+        properties:
+          dispute_id:
+            type: string
+            description: Unique identifier for the dispute
+          observation_id:
+            type: string
+            description: Observation being disputed
+          disputer_id:
+            type: string
+            description: User ID of the person disputing
+          reason:
+            type: string
+            description: Reason for the dispute
+          evidence:
+            type: array
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - photo
+                    - audio
+                    - text
+                url:
+                  type: string
+                  format: uri
+                description:
+                  type: string
+            description: Supporting evidence for the dispute
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of dispute creation
+          status:
+            type: string
+            enum:
+              - open
+              - resolved
+              - escalated
+            default: open
+          previous_status:
+            type: string
+            enum:
+              - verified
+              - pending
+            description: Status of observation before dispute
+        required:
+          - dispute_id
+          - observation_id
+          - disputer_id
+          - reason
+          - created_at
+    observationExpirationWarning:
+      payload:
+        type: object
+        properties:
+          observation_id:
+            type: string
+            description: Observation triggering the warning
+          warning_type:
+            type: string
+            enum:
+              - seasonal_mismatch
+              - stale_data
+              - historical
+            description: Type of expiration warning
+          message:
+            type: string
+            description: Detailed warning message explaining the issue
+          suggested_action:
+            type: string
+            description: Recommended action to address the issue
+          expires_at:
+            type: string
+            format: date-time
+            description: When the observation might expire
+          submitted_at:
+            type: string
+            format: date-time
+            description: Original submission timestamp
+        required:
+          - observation_id
+          - warning_type
+          - message
+    observationConflictDetected:
+      payload:
+        type: object
+        properties:
+          conflict_id:
+            type: string
+            description: Unique identifier for the conflict
+          observation_ids:
+            type: array
+            items:
+              type: string
+            description: Conflicting observation IDs
+          location_bounds:
+            type: object
+            properties:
+              north:
+                type: number
+              south:
+                type: number
+              east:
+                type: number
+              west:
+                type: number
+            description: Geographic bounds of the conflict area
+          time_range:
+            type: object
+            properties:
+              start_date:
+                type: string
+                format: date-time
+              end_date:
+                type: string
+                format: date-time
+            description: Time period when observations conflict
+          severity:
+            type: string
+            enum:
+              - low
+              - medium
+              - high
+            description: Severity assessment of the conflict
+          recommended_action:
+            type: string
+            description: Suggested resolution approach
+          first_observation_id:
+            type: string
+            description: Most senior observation in the conflict
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp when conflict was detected
+        required:
+          - conflict_id
+          - observation_ids
+          - location_bounds
+          - time_range
+          - created_at
+    observationBatchSubmitted:
+      payload:
+        type: object
+        properties:
+          batch_id:
+            type: string
+            description: Unique identifier for the batch
+          user_id:
+            type: string
+            description: ID of the submitting user
+          observation_count:
+            type: integer
+            minimum: 1
+            description: Number of observations in the batch
+          status:
+            type: string
+            enum:
+              - processing
+              - completed
+              - failed
+            description: Current processing status
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of batch submission
+          completed_at:
+            type: string
+            format: date-time
+            description: Timestamp when processing completed
+          error_count:
+            type: integer
+            minimum: 0
+            description: Number of observations that failed processing
+          success_count:
+            type: integer
+            minimum: 0
+            description: Number of successfully processed observations
+        required:
+          - batch_id
+          - user_id
+          - observation_count
+          - created_at
+    verificationRequested:
+      payload:
+        type: object
+        properties:
+          verification_id:
+            type: string
+            description: Unique identifier for the verification request
+          observation_id:
+            type: string
+            description: Observation requiring verification
+          requested_by:
+            type: string
+            description: User ID requesting verification
+          expertise_required:
+            type: string
+            description: Required expertise category
+          reason:
+            type: string
+            description: Reason for verification request
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of request
+          expires_at:
+            type: string
+            format: date-time
+            description: When request expires if not addressed
+        required:
+          - verification_id
+          - observation_id
+          - requested_by
+          - created_at
+    verificationCompleted:
+      payload:
+        type: object
+        properties:
+          verification_id:
+            type: string
+            description: Unique identifier for the verification
+          observation_id:
+            type: string
+            description: Verified observation
+          verified_by:
+            type: string
+            description: User ID of the verifier
+          verification_tier:
+            type: integer
+            minimum: 1
+            maximum: 2
+            description: Tier of verification (1=user, 2=expert)
+          decision:
+            type: string
+            enum:
+              - verified
+              - disputed
+            description: Verification outcome
+          comments:
+            type: string
+            description: Verifier's comments
+          confidence_level:
+            type: number
+            minimum: 0
+            maximum: 1
+            description: Confidence in the verification decision
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of verification completion
+        required:
+          - verification_id
+          - observation_id
+          - verified_by
+          - decision
+          - created_at
+    verificationAdditionalInfoRequested:
+      payload:
+        type: object
+        properties:
+          request_id:
+            type: string
+            description: Unique identifier for the request
+          observation_id:
+            type: string
+            description: Observation needing additional info
+          requested_by:
+            type: string
+            description: User ID making the request
+          request_type:
+            type: string
+            enum:
+              - better_image
+              - clarification
+              - additional_context
+            description: Type of additional information needed
+          reason:
+            type: string
+            description: Why the information is needed
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of request creation
+          expires_at:
+            type: string
+            format: date-time
+            description: When request expires if not addressed
+        required:
+          - request_id
+          - observation_id
+          - requested_by
+          - request_type
+          - created_at
+    mapObservationsUpdated:
+      payload:
+        type: object
+        properties:
+          viewport_bounds:
+            $ref: "#/components/schemas/mapViewport"
+          new_observation_ids:
+            type: array
+            items:
+              type: string
+            description: Newly added observation IDs in this viewport
+          updated_observation_ids:
+            type: array
+            items:
+              type: string
+            description: Observation IDs with updated data
+          removed_observation_ids:
+            type: array
+            items:
+              type: string
+            description: Observation IDs no longer visible in viewport
+          heatmap_updates:
+            type: object
+            description: Heatmap intensity changes in viewport
+            additionalProperties: true
+          layer_updates:
+            type: array
+            items:
+              type: string
+              enum:
+                - observations
+                - conservation_zones
+                - water_bodies
+                - habitat_health
+            description: Map layers affected by the update
+          timestamp:
+            type: string
+            format: date-time
+            description: Event timestamp
+        required:
+          - viewport_bounds
+          - new_observation_ids
+          - updated_observation_ids
+          - timestamp
+    mapHabitatHealthUpdated:
+      payload:
+        type: object
+        properties:
+          location_bounds:
+            $ref: "#/components/schemas/mapViewport"
+          habitat_type:
+            type: string
+            description: Type of habitat being assessed
+          previous_score:
+            type: number
+            minimum: 0
+            maximum: 100
+            description: Previous habitat health score
+          new_score:
+            type: number
+            minimum: 0
+            maximum: 100
+            description: Updated habitat health score
+          observation_count:
+            type: integer
+            minimum: 1
+            description: Number of observations contributing to score
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of update
+        required:
+          - location_bounds
+          - habitat_type
+          - previous_score
+          - new_score
+          - observation_count
+          - updated_at
+    userCredibilityScoreUpdated:
+      payload:
+        type: object
+        properties:
+          user_id:
+            type: string
+            description: User whose score changed
+          previous_score:
+            type: number
+            minimum: 0
+            maximum: 100
+            description: Previous credibility score
+          new_score:
+            type: number
+            minimum: 0
+            maximum: 100
+            description: Updated credibility score
+          reason:
+            type: string
+            description: Reason for score change
+          breakdown:
+            type: object
+            properties:
+              id_accuracy:
+                type: number
+                minimum: 0
+                maximum: 100
+                description: Accuracy of species identification
+              dispute_outcomes:
+                type: number
+                minimum: 0
+                maximum: 100
+                description: Success rate in dispute resolutions
+              observation_frequency:
+                type: number
+                minimum: 0
+                maximum: 100
+                description: Consistency of contributions
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of update
+        required:
+          - user_id
+          - previous_score
+          - new_score
+          - updated_at
+    userProfileUpdated:
+      payload:
+        type: object
+        properties:
+          user_id:
+            type: string
+            description: User whose profile was updated
+          field_name:
+            type: string
+            description: Name of the updated field
+          previous_value:
+            type: string
+            description: Previous value of the field
+          new_value:
+            type: string
+            description: New value of the field
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of update
+        required:
+          - user_id
+          - field_name
+          - previous_value
+          - new_value
+          - updated_at
+    userSettingsUpdated:
+      payload:
+        type: object
+        properties:
+          user_id:
+            type: string
+            description: User whose settings were updated
+          setting_category:
+            type: string
+            enum:
+              - data_privacy
+              - notification_preferences
+              - map_preferences
+            description: Category of settings changed
+          updated_settings:
+            type: object
+            description: Specific settings that changed
+            additionalProperties: true
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of update
+        required:
+          - user_id
+          - setting_category
+          - updated_settings
+          - updated_at
+    educationalSpotlightUpdated:
+      payload:
+        type: object
+        properties:
+          spotlight_id:
+            type: string
+            description: Unique identifier for the spotlight
+          update_type:
+            type: string
+            enum:
+              - created
+              - updated
+              - deleted
+            description: Type of update operation
+          species_id:
+            type: string
+            description: Species the spotlight is about
+          title:
+            type: string
+            description: Spotlight title
+          content_summary:
+            type: string
+            description: Brief summary of the content
+          relevance_location:
+            type: object
+            $ref: "#/components/schemas/location"
+            description: Location context for relevance
+          created_at:
+            type: string
+            format: date-time
+            description: Content creation timestamp
+          updated_at:
+            type: string
+            format: date-time
+            description: Content update timestamp
+        required:
+          - spotlight_id
+          - update_type
+          - species_id
+          - updated_at
+    educationalGuideUpdated:
+      payload:
+        type: object
+        properties:
+          guide_id:
+            type: string
+            description: Unique identifier for the guide
+          update_type:
+            type: string
+            enum:
+              - created
+              - updated
+              - deleted
+            description: Type of update operation
+          guide_type:
+            type: string
+            enum:
+              - habitat
+              - species
+              - seasonal
+            description: Type of educational guide
+          title:
+            type: string
+            description: Guide title
+          content_summary:
+            type: string
+            description: Brief summary of the content
+          applicable_areas:
+            type: array
+            items:
+              $ref: "#/components/schemas/locationBounds"
+            description: Geographic areas where guide applies
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of update
+        required:
+          - guide_id
+          - update_type
+          - guide_type
+          - updated_at
+    educationalChallengeProgress:
+      payload:
+        type: object
+        properties:
+          user_id:
+            type: string
+            description: User participating in the challenge
+          challenge_id:
+            type: string
+            description: Challenge being tracked
+          previous_progress:
+            type: integer
+            minimum: 0
+            description: Previous progress count
+          new_progress:
+            type: integer
+            minimum: 0
+            description: Updated progress count
+          target:
+            type: integer
+            minimum: 1
+            description: Target to complete the challenge
+          completed:
+            type: boolean
+            description: Whether challenge is now complete
+          completed_at:
+            type: string
+            format: date-time
+            description: Timestamp of completion (if applicable)
+          updated_at:
+            type: string
+            format: date-time
+            description: Timestamp of progress update
+        required:
+          - user_id
+          - challenge_id
+          - previous_progress
+          - new_progress
+          - target
+          - updated_at
+    notificationCreated:
+      payload:
+        type: object
+        properties:
+          notification_id:
+            type: string
+            description: Unique identifier for the notification
+          user_id:
+            type: string
+            description: Recipient user ID
+          notification_type:
+            type: string
+            enum:
+              - verification
+              - dispute
+              - challenge
+              - educational
+              - system
+            description: Category of notification
+          title:
+            type: string
+            description: Notification title
+          message:
+            type: string
+            description: Notification content
+          link:
+            type: string
+            format: uri
+            description: Deep link to relevant content
+          related_entity_id:
+            type: string
+            description: ID of related entity (observation, dispute, etc.)
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of creation
+          expires_at:
+            type: string
+            format: date-time
+            description: When notification expires (if applicable)
+        required:
+          - notification_id
+          - user_id
+          - notification_type
+          - title
+          - message
+          - created_at
+    notificationRead:
+      payload:
+        type: object
+        properties:
+          notification_id:
+            type: string
+            description: Notification that was read
+          user_id:
+            type: string
+            description: User who read the notification
+          read_at:
+            type: string
+            format: date-time
+            description: Timestamp when notification was marked as read
+        required:
+          - notification_id
+          - user_id
+          - read_at
+    offlineSyncRequested:
+      payload:
+        type: object
+        properties:
+          user_id:
+            type: string
+            description: User requesting sync
+          sync_type:
+            type: string
+            enum:
+              - manual
+              - automatic
+            description: How sync was triggered
+          pending_items_count:
+            type: integer
+            minimum: 0
+            description: Number of pending items to sync
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp of sync request
+        required:
+          - user_id
+          - sync_type
+          - created_at
+    offlineSyncCompleted:
+      payload:
+        type: object
+        properties:
+          user_id:
+            type: string
+            description: User who completed sync
+          sync_id:
+            type: string
+            description: Unique identifier for the sync operation
+          successfully_synced_count:
+            type: integer
+            minimum: 0
+            description: Number of items successfully synced
+          failed_items_count:
+            type: integer
+            minimum: 0
+            description: Number of items that failed to sync
+          conflict_resolution_count:
+            type: integer
+            minimum: 0
+            description: Number of conflicts resolved during sync
+          completed_at:
+            type: string
+            format: date-time
+            description: Timestamp of sync completion
+        required:
+          - user_id
+          - sync_id
+          - successfully_synced_count
+          - completed_at
+  schemas:
+    observationLocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+        blurred:
+          type: boolean
+      required:
+        - latitude
+        - longitude
+    observationMedia:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - photo
+            - audio
+        url:
+          type: string
+          format: uri
+        metadata:
+          type: object
+          additionalProperties: true
+    mapViewport:
+      type: object
+      properties:
+        north:
+          type: number
+        south:
+          type: number
+        east:
+          type: number
+        west:
+          type: number
+      required:
+        - north
+        - south
+        - east
+        - west
+    location:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+      required:
+        - latitude
+        - longitude
+    locationBounds:
+      type: object
+      properties:
+        north:
+          type: number
+        south:
+          type: number
+        east:
+          type: number
+        west:
+          type: number
+      required:
+        - north
+        - south
+        - east
+        - west

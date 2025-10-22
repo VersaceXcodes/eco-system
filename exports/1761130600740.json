@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761130600740,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_USER_MENU",
+      "version": "latest"
+    }
+  },
+  "projectId": "eco-system",
+  "files": [
+    {
+      "path": "/mnt/data/eco-system/vitereact/src/components/views/GV_USER_MENU.tsx",
+      "type": "text",
+      "size": 26516,
+      "dependencies": false
+    }
+  ]
+}
